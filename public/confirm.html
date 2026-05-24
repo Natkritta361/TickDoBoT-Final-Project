@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <title>TickDoBot — Submit Evidence</title>
+    <script charset="utf-8" src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #FFFFFF;
+            --surface: #F8FAFC;
+            --text-dark: #1E293B;
+            --text-muted: #64748B;
+            --primary: #10B981;
+            --primary-light: #D1FAE5;
+            --dark-bg: #1A1A2E;
+            --border: #E2E8F0;
+            --radius: 20px;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+            color: var(--text-dark);
+            -webkit-font-smoothing: antialiased;
+            padding: 24px 20px;
+            padding-bottom: 60px;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+        .badge-title {
+            display: inline-block;
+            background-color: var(--primary-light);
+            color: var(--primary);
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: 1px;
+            padding: 6px 14px;
+            border-radius: 20px;
+            margin-bottom: 16px;
+            text-transform: uppercase;
+        }
+        h1 {
+            font-size: 32px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            color: var(--text-dark);
+            margin-bottom: 8px;
+        }
+        p.subtitle {
+            font-size: 15px;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        /* Confirming For Card */
+        .confirming-card {
+            background-color: #FFFFFF;
+            border: 2px solid var(--primary);
+            border-radius: var(--radius);
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 32px;
+            box-shadow: 0 4px 14px rgba(16, 185, 129, 0.1);
+        }
+        .avatar {
+            width: 56px;
+            height: 56px;
+            background-color: #3B82F6;
+            color: white;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: 700;
+        }
+        .card-info { flex: 1; }
+        .label-sm {
+            font-size: 11px;
+            font-weight: 800;
+            color: var(--primary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 4px;
+        }
+        .name {
+            font-size: 20px;
+            font-weight: 800;
+            color: var(--text-dark);
+            margin-bottom: 4px;
+        }
+        .task-name {
+            font-size: 14px;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        /* Form */
+        form { display: flex; flex-direction: column; flex: 1; }
+        .form-group { margin-bottom: 24px; }
+        .section-title {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12px;
+            font-weight: 800;
+            color: var(--text-dark);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 12px;
+        }
+        
+        textarea {
+            width: 100%;
+            background-color: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 16px;
+            font-family: 'Inter', sans-serif;
+            font-size: 15px;
+            color: var(--text-dark);
+            min-height: 100px;
+            resize: none;
+        }
+        textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+        textarea::placeholder { color: #94A3B8; }
+
+        /* Upload Area */
+        .upload-area {
+            background-color: var(--surface);
+            border: 2px dashed #CBD5E1;
+            border-radius: 16px;
+            padding: 40px 20px;
+            text-align: center;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .upload-area:active { transform: scale(0.98); }
+        .upload-icon {
+            font-size: 32px;
+            color: #64748B;
+            margin-bottom: 12px;
+            display: block;
+        }
+        .upload-text {
+            color: var(--accent);
+            font-size: 14px;
+            font-weight: 500;
+        }
+        input[type="file"] {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            opacity: 0; cursor: pointer;
+        }
+
+        /* Submit Button */
+        .btn-submit {
+            background-color: var(--dark-bg);
+            color: white;
+            border: none;
+            width: 100%;
+            padding: 18px;
+            border-radius: 16px;
+            font-size: 16px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            cursor: pointer;
+            margin-top: auto;
+            transition: transform 0.2s;
+        }
+        .btn-submit:active { transform: scale(0.98); }
+        .btn-submit:disabled {
+            background-color: #94A3B8;
+            cursor: not-allowed;
+        }
+
+        #loading {
+            text-align: center;
+            display: none;
+            color: var(--primary);
+            font-weight: 600;
+            margin-top: 16px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <div class="badge-title">VERIFICATION</div>
+        <h1>Submit Evidence</h1>
+        <p class="subtitle">Upload proof to complete your assignment</p>
+    </div>
+
+    <div class="confirming-card">
+        <div class="avatar" id="userAvatar">?</div>
+        <div class="card-info">
+            <div class="label-sm">CONFIRMING FOR</div>
+            <div class="name" id="userName">User Name</div>
+            <div class="task-name" id="taskName">Task: Loading...</div>
+        </div>
+    </div>
+
+    <form id="confirmForm">
+        <div class="form-group">
+            <div class="section-title">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                ADDITIONAL NOTES (OPTIONAL)
+            </div>
+            <textarea id="note" name="note" placeholder="Add any details, links, or notes for your team..."></textarea>
+        </div>
+
+        <div class="form-group">
+            <div class="section-title">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
+                ATTACH EVIDENCE *
+            </div>
+            <div class="upload-area">
+                <input type="file" id="proofFile" name="proofFile" accept="image/*,.pdf,.zip" required>
+                <span class="upload-icon">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#64748B" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+                </span>
+                <span class="upload-text" id="fileNameDisplay">Tap to select a file or take a photo</span>
+            </div>
+        </div>
+
+        <button type="submit" class="btn-submit" id="submitBtn">CONFIRM SUBMISSION</button>
+        <div id="loading">Uploading... Please wait.</div>
+    </form>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            let groupId = urlParams.get('groupId');
+            const taskId = urlParams.get('taskId');
+            let assignmentId = urlParams.get('assignmentId');
+
+            // Handle file input display
+            const fileInput = document.getElementById('proofFile');
+            const fileNameDisplay = document.getElementById('fileNameDisplay');
+            fileInput.addEventListener('change', (e) => {
+                if (e.target.files.length > 0) {
+                    fileNameDisplay.textContent = e.target.files[0].name;
+                    fileNameDisplay.style.color = '#10B981'; // Primary color
+                }
+            });
+
+            try {
+                await liff.init({ liffId: window.__LIFF_ID__ || '2009838530-I0nGl09H' });
+                if (liff.isLoggedIn()) {
+                    const profile = await liff.getProfile();
+                    document.getElementById('userName').textContent = profile.displayName;
+                    document.getElementById('userAvatar').textContent = profile.displayName.charAt(0).toUpperCase();
+                    const context = liff.getContext();
+                    if (context && (context.groupId || context.roomId)) {
+                        groupId = context.groupId || context.roomId;
+                    }
+                } else {
+                    liff.login({ redirectUri: location.href });
+                    return;
+                }
+            } catch (err) { console.warn('LIFF init failed', err); }
+
+            if (groupId && taskId) {
+                // Fetch task details, assignments, and member profiles
+                fetch(`/api/tasks/${groupId}/${taskId}`)
+                    .then(res => res.json())
+                    .then(async data => {
+                        if (data.success && data.task) {
+                            document.getElementById('taskName').textContent = `Task: ${data.task.taskName}`;
+                            
+                            if (data.assignments) {
+                                let targetAssign = null;
+                                
+                                if (assignmentId) {
+                                    targetAssign = data.assignments.find(a => a.assignmentId === assignmentId);
+                                } else {
+                                    // Auto-detect based on logged-in user
+                                    if (liff.isLoggedIn()) {
+                                        const profile = await liff.getProfile();
+                                        targetAssign = data.assignments.find(a => a.lineUserId === profile.userId);
+                                        if (targetAssign) {
+                                            // Update the global assignmentId so the form uses it
+                                            assignmentId = targetAssign.assignmentId;
+                                        }
+                                    }
+                                }
+
+                                if (targetAssign) {
+                                    const assigneeId = targetAssign.lineUserId;
+                                    const memberProfile = data.members?.find(m => m.userId === assigneeId);
+                                    const displayName = memberProfile?.displayName || assigneeId;
+                                    const pictureUrl = memberProfile?.pictureUrl;
+                                    
+                                    document.getElementById('userName').textContent = displayName;
+                                    if (pictureUrl) {
+                                        document.getElementById('userAvatar').innerHTML = `<img src="${pictureUrl}" style="width:100%; height:100%; object-fit:cover; border-radius:16px;">`;
+                                    } else {
+                                        document.getElementById('userAvatar').textContent = displayName.charAt(0).toUpperCase();
+                                    }
+                                }
+                            }
+                        }
+                    });
+            }
+
+            const form = document.getElementById('confirmForm');
+            const submitBtn = document.getElementById('submitBtn');
+            const loading = document.getElementById('loading');
+
+            form.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                if (!fileInput.files.length) return alert('Please select a file.');
+
+                submitBtn.disabled = true;
+                submitBtn.style.display = 'none';
+                loading.style.display = 'block';
+
+                try {
+                    const formData = new FormData();
+                    formData.append('proofFile', fileInput.files[0]);
+                    formData.append('note', document.getElementById('note').value);
+                    if (assignmentId) formData.append('assignmentId', assignmentId);
+
+                    const response = await fetch(`/api/tasks/${groupId}/${taskId}/confirm`, {
+                        method: 'POST',
+                        body: formData
+                    });
+
+                    const result = await response.json();
+
+                    if (result.success) {
+                        alert('Submission Successful!');
+
+                        if (liff.isInClient() && result.flexCard) {
+                            try {
+                                await liff.sendMessages([
+                                    {
+                                        type: 'flex',
+                                        altText: '✅ Evidence submitted',
+                                        contents: result.flexCard
+                                    }
+                                ]);
+                            } catch (sendErr) {
+                                console.warn('Failed to send flex message via LIFF', sendErr);
+                            }
+                        }
+
+                        if (liff.isInClient()) liff.closeWindow();
+                        else window.location.href = `/index.html?groupId=${groupId}`;
+                    } else {
+                        throw new Error(result.error);
+                    }
+                } catch (error) {
+                    alert(`Error: ${error.message}`);
+                    submitBtn.disabled = false;
+                    submitBtn.style.display = 'block';
+                    loading.style.display = 'none';
+                }
+            });
+        });
+    </script>
+</body>
+</html>

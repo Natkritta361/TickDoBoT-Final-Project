@@ -1,0 +1,33 @@
+# Cursor Rules: TickDoBot Project
+
+## 1. Stack & Technologies
+*   **Frontend:** Vanilla HTML, CSS (Glassmorphism, CSS variables), JS, LINE LIFF SDK. No Tailwind.
+*   **Backend:** Node.js, Express, Multer, node-cron.
+*   **Database:** Google Cloud Firestore (NoSQL subcollections).
+
+## 2. Directory Structure
+*   `index.js`: Main Express backend server & REST API routing.
+*   `public/index.html` & `public/view-tasks.html`: Dashboards.
+*   `public/create-task.html`: Task creation interface.
+*   `public/confirm.html`: Proof submission form.
+*   `src/config/firebase.js`: Firebase operations.
+*   `src/config/schema.js`: Firestore schemas.
+*   `src/handlers/webhook.js`: LINE Chatbot webhook events.
+*   `src/services/scheduler.js`: Deadline alerts using node-cron.
+*   `src/services/flexMessages.js`: LINE Flex Message designs.
+
+## 3. Critical Rules for Frontend Updates
+*   **Display Names:** Always map raw user IDs to actual LINE display names using `memberMap` supplied by the backend. Do NOT display raw IDs or fallback strings like `Ubbe2`.
+*   **Conditional Rendering:** 
+    *   If task is complete (`status == 'done'`), hide the `Edit Task` and `SUBMIT` buttons.
+    *   If assignment is submitted, show the **`PROOF`** button (blue) which calls `viewProof()` to open the file and show the note.
+*   **Self-Lookup:** On `confirm.html`, lookup `assignmentId` automatically via `liff.getProfile()` matching the backend task data if not present in the URL query parameters.
+
+## 4. Critical Rules for Backend Updates
+*   **Image Upload Sanitization:** Clean file names using a regex `/[^a-zA-Z0-9._-]/g` and prefix with `Date.now()` to avoid naming conflicts.
+*   **Caching Profiles:** Fetch profiles from the local database `users` collection first. Only query LINE API and cache the result if the record doesn't exist locally.
+*   **Alarm De-duplication:** Log all scheduled reminders to the `notificationLogs` Firestore collection to prevent redundant messages.
+
+## 5. Coding & Comments
+*   Retain Thai text comments for students where helpful.
+*   Preserve existing functions unless direct replacement is requested.
