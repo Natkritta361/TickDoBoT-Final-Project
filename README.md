@@ -185,4 +185,6 @@ GitHub: [@Natkritta361](https://github.com/Natkritta361)
 
 ## 📄 License
 
-This project is for educational purposes.
+This project was developed as a **Senior Final Project** for a Bachelor of Science in Computer Science degree.  
+All rights reserved © 2025 Natkritta Phaisanwattanakul.
+
