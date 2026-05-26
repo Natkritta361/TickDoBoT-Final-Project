@@ -179,7 +179,7 @@ npm start
 
 **Natkritta Phaisanwattanakul**  
 BSc. Computer Science  
-GitHub: [@natkrittap](https://github.com/natkrittap)
+GitHub: [@Natkritta361](https://github.com/Natkritta361)
 
 ---
 
