@@ -2,12 +2,12 @@
  * TickDoBot — Firestore Database Schema & Factory Functions
  *
  * Collections:
- *   users/            {Line_UserID}
- *   groups/           {Group_ID}
+ *   users/            {lineUserId}
+ *   groups/           {groupId}
  *   groups/{id}/members        (sub-collection)
  *   groups/{id}/tasks          (sub-collection)
  *   groups/{id}/tasks/{id}/assignments  (sub-collection)
- *   notificationLogs/ {Noti_ID}
+ *   notificationLogs/ {notiId}
  *
  * Mirrors the ER diagram from the CS303 report (tables 3.20–3.25).
  */
@@ -57,17 +57,16 @@ function createGroup({ groupId, groupName = 'Unnamed Group', groupPicture = '' }
 }
 
 // ─────────────────────────────────────────────
-// USER-GROUP  (mirrors Table 3.22 — stored as sub-collection members/)
+// MEMBER  (mirrors Table 3.22 — stored as sub-collection members/)
 // ─────────────────────────────────────────────
 /**
- * @typedef {Object} UserGroup
+ * @typedef {Object} Member
  * @property {string} lineUserId   FK → users
  * @property {string} groupId     FK → groups
- * @property {'admin'|'member'} role
  * @property {Date}   joinedAt
  */
-function createUserGroup({ lineUserId, groupId, role = 'member' }) {
-    return { lineUserId, groupId, role, joinedAt: new Date() };
+function createUserGroup({ lineUserId, groupId }) {
+    return { lineUserId, groupId, joinedAt: new Date() };
 }
 
 // ─────────────────────────────────────────────
