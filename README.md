@@ -178,7 +178,7 @@ npm start
 ## 👨‍💻 Developer
 
 **Natkritta Poonkham**  
-BSc. Computer Science  
+BSc. Computer Science — Thammasat University  
 GitHub: [@Natkritta361](https://github.com/Natkritta361)
 
 ---
