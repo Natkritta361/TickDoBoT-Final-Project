@@ -177,7 +177,7 @@ npm start
 
 ## 👨‍💻 Developer
 
-**Natkritta Phaisanwattanakul**  
+**Natkritta Poonkham**  
 BSc. Computer Science  
 GitHub: [@Natkritta361](https://github.com/Natkritta361)
 
@@ -186,5 +186,5 @@ GitHub: [@Natkritta361](https://github.com/Natkritta361)
 ## 📄 License
 
 This project was developed as a **Senior Final Project** for a Bachelor of Science in Computer Science degree.  
-All rights reserved © 2025 Natkritta Phaisanwattanakul.
+All rights reserved © 2025 Natkritta Poonkham.
 
